@@ -21,8 +21,8 @@ REACT_APP_TWITCH_SECRET=<twitch api secret>
 
 ## Todo
 
-* Youtube video pause/resume/scrub
 * Twitch VOD support
 * Youtube stream support
-* Open popout Twitch chat
 * Reload Twitch stream
+* Youtube video scrub
+* Display currently playing content (with appropriate controls?)

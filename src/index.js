@@ -10,6 +10,8 @@ class Stream extends React.Component {
   constructor(props) {
     super(props);
     this.click = this.click.bind(this);
+    this.openStream = this.openStream.bind(this);
+    this.openChat = this.openChat.bind(this);
   }
   
   click() {
@@ -36,10 +38,22 @@ class Stream extends React.Component {
     
   }
 
+  openStream(event) {
+    event.stopPropagation();
+    window.open('https://www.twitch.tv/' + this.props.name);
+  }
+
+  openChat(event) {
+    event.stopPropagation();
+    window.open('https://www.twitch.tv/popout/' + this.props.name + '/chat');
+  }
+
   
   render() {
     return (
 	<button className="stream" onClick={this.click}>
+	<div className="openlocal openlocal-twitch" onClick={this.openStream}></div>
+	<div className="openlocal openlocal-chat" onClick={this.openChat}></div>
 	<h1>{this.props.name}</h1>
 	<img src={this.props.thumb} />
 	<h2>{this.props.title}</h2>
@@ -160,19 +174,29 @@ class Nav extends React.Component {
   }
 
   pause() {
-    // TODO
+    let data = {
+      'jsonrpc': '2.0',
+      'method': 'Player.PlayPause',
+      'params': [
+	1, 'toggle'
+      ],
+      'id': 100
+    };
+    axios.post('/jsonrpc?Player.PlayPause', data)
+      .then((r) => {
+	console.log('Play/Pause video');
+      })
+      .catch((e) => {
+	console.log(e);
+      });
   }
 
-  resume() {
-    // TODO
-  }
   
   render() {
     return (
 	<ul>
 	<li><a onClick={this.stop}>Stop</a></li>
 	<li><a onClick={this.pause}>Pause</a></li>
-	<li><a onClick={this.resume}>Resume</a></li>
 	</ul>
     );
   }

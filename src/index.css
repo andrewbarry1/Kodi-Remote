@@ -51,10 +51,12 @@ button {
     border: 0px;
     border-radius: 10px;
     outline: none;
+    overflow: hidden;
 }
 
 .root button {
     width: 340px;
+    position: relative;
 }
 
 .root p {
@@ -79,4 +81,22 @@ button {
     border-radius: 10px;
     font-family: 'Roboto', sans-serif;
     font-size: 20px;
+}
+
+.openlocal {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    bottom: 5px;
+    background-size: cover;
+}
+
+.openlocal-twitch {
+    right: 5px;
+    background-image: url("/glitch.png");
+}
+
+.openlocal-chat {
+    left: 5px;
+    background-image: url("/chat.png");
 }
