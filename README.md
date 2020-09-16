@@ -3,6 +3,8 @@
 A small React website for playing/controlling Twitch and Youtube videos on Kodi.
 Runs locally, not on the Kodi device itself.
 
+![Kodi-Remote](https://i.imgur.com/kHh1UVn.png)
+
 ## Installation/Usage
 
 0. Install Kodi somewhere on the local network with the Twitch and Youtube plugins.
