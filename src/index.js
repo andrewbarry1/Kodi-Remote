@@ -65,88 +65,20 @@ class Stream extends React.Component {
 }
 
 class Streams extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      error: null,
-      isLoaded: false,
-      streams: []
-    };
-  }
-
-  componentDidMount() {
-    
-    axios.post('https://id.twitch.tv/oauth2/token?client_id='+ process.env.REACT_APP_TWITCH_CLIENT +'&client_secret='+ process.env.REACT_APP_TWITCH_SECRET +'&grant_type=client_credentials&scope=')
-      .then((response) => {
-	let accessToken = response.data.access_token;
-	let headers = {'Client-ID': process.env.REACT_APP_TWITCH_CLIENT, 'Authorization': 'Bearer ' + accessToken};
-	const instance = axios.create({
-	  baseURL: 'https://api.twitch.tv/helix/',
-	  timeout: 2000,
-	  headers: headers
-	});
-	instance.get('users/follows?from_id=' + process.env.REACT_APP_TWITCH_ID + '&first=100')
-	  .then((r2) => {
-	    var following = [];
-	    r2.data.data.forEach((follow) => {
-	      following.push(follow.to_id);
-	    });
-	    if (following.length > 0) {
-	      instance.get('streams?user_id=' + following.join('&user_id='))
-		.then((r3) => { // Live streams fetched!
-		  this.setState({
-		    streams: r3.data.data,
-		    isLoaded: true
-		  });
-		})
-		.catch((e3) => {
-		  console.log(e3);
-		  this.setState({
-		    error: e3
-		  });
-		});
-	    }
-	    else {
-	      this.setState({
-		streams: [],
-		isLoaded: true
-	      });
-	    }
-	  })
-	  .catch((e2) => {
-	    console.log(e2);
-	    this.setState({
-	      error: e2
-	    });
-	  });
-      })
-      .catch((error) => {
-	console.log(error);
-	this.setState({
-	  error: error
-	});
-      });
-
-
-    
-  }
-
-  
   render() {
-    if (this.state.error) {
+    if (this.props.error) {
       return (
 	  <center><p>Error loading twitch streams</p></center>
       );
     }
-    else if (!this.state.isLoaded) {
+    else if (!this.props.isLoaded) {
       return (
 	  <center><img src='loading.png'/></center>
       );
     }
     return (
 	<center>
-	{this.state.streams.map(stream => (
+	{this.props.streams.map(stream => (
 	    <Stream name={stream.user_name} thumb={stream.thumbnail_url.replace('{width}','320').replace('{height}','180')} title={stream.title} viewers={stream.viewer_count} stream_id={stream.user_id}/>
 	  ))}
       </center>
@@ -156,6 +88,11 @@ class Streams extends React.Component {
 
 class Nav extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.reload = this.props.reload.bind(this);
+  }
+  
   stop() {
     let data = {
       'jsonrpc': '2.0',
@@ -195,8 +132,9 @@ class Nav extends React.Component {
   render() {
     return (
 	<ul>
-	<li><a onClick={this.stop}>Stop</a></li>
-	<li><a onClick={this.pause}>Pause</a></li>
+	<li className="navbar-left"><a onClick={this.stop}>Stop</a></li>
+	<li className="navbar-left"><a onClick={this.pause}>Pause</a></li>
+	<li className="navbar-right"><a onClick={this.props.reload}><img src='reload.png' /></a></li>
 	</ul>
     );
   }
@@ -255,20 +193,104 @@ class Youtube extends React.Component {
   }
 }
 
+
+class Page extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: null,
+      isLoaded: false,
+      streams: []
+    };
+    this.reload = this.reload.bind(this);
+  }
+
+  reload() {
+    this.setState({
+      isLoaded: false,
+      error: null
+    });
+    axios.post('https://id.twitch.tv/oauth2/token?client_id='+ process.env.REACT_APP_TWITCH_CLIENT +'&client_secret='+ process.env.REACT_APP_TWITCH_SECRET +'&grant_type=client_credentials&scope=')
+      .then((response) => {
+	let accessToken = response.data.access_token;
+	let headers = {'Client-ID': process.env.REACT_APP_TWITCH_CLIENT, 'Authorization': 'Bearer ' + accessToken};
+	const instance = axios.create({
+	  baseURL: 'https://api.twitch.tv/helix/',
+	  timeout: 2000,
+	  headers: headers
+	});
+	instance.get('users/follows?from_id=' + process.env.REACT_APP_TWITCH_ID + '&first=100')
+	  .then((r2) => {
+	    var following = [];
+	    r2.data.data.forEach((follow) => {
+	      following.push(follow.to_id);
+	    });
+	    if (following.length > 0) {
+	      instance.get('streams?user_id=' + following.join('&user_id='))
+		.then((r3) => { // Live streams fetched!
+		  this.setState({
+		    streams: r3.data.data,
+		    isLoaded: true
+		  });
+		})
+		.catch((e3) => {
+		  console.log(e3);
+		  this.setState({
+		    error: e3
+		  });
+		});
+	    }
+	    else {
+	      this.setState({
+		streams: [],
+		isLoaded: true
+	      });
+	    }
+	  })
+	  .catch((e2) => {
+	    console.log(e2);
+	    this.setState({
+	      error: e2
+	    });
+	  });
+      })
+      .catch((error) => {
+	console.log(error);
+	this.setState({
+	  error: error
+	});
+      });
+  }
+
+  componentDidMount() {
+    this.reload();
+  }
+  
+  render() {
+    return (
+	<>
+	<div id="nav" className="nav">
+	<Nav reload={this.reload} />
+	</div>
+
+	<div id="youtube" className="youtube">
+	<Youtube />
+	</div>
+
+	<div id="root" className="root">
+	<Streams streams={this.state.streams} isLoaded={this.state.isLoaded} error={this.state.error} />
+	</div>
+	</>
+    );
+  }
+
+
+}
+
+
 // ========================================
 
 ReactDOM.render(
-    <Nav />,
-  document.getElementById('nav')
-);
-
-ReactDOM.render(
-    < Youtube />,
-  document.getElementById('youtube')
-);
-
-
-ReactDOM.render(
-    <Streams />,
-  document.getElementById('root')
+    <Page />,
+  document.getElementById('body')
 );

@@ -13,6 +13,7 @@ body {
     left: 0px;
     top: 0px;
     height: 30px;
+    z-index: 1000;
 }
 
 .nav ul {
@@ -21,18 +22,26 @@ body {
     padding: 0;
     overflow: hidden;
 }
-.nav li {
-    float: left;
-}
 .nav li a {
     display: block;
     color: white;
     text-align: center;
-    padding: 6px 16px;
     text-decoration: none;
 }
 .nav li a:hover {
     background-color: #333333;
+}
+
+.navbar-left {
+    float: left;
+    padding: 6px 16px;
+}
+.navbar-right {
+    float: right;
+    height: 30px;
+}
+.nav img {
+    height: 30px;
 }
 
 

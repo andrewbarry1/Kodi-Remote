@@ -22,7 +22,6 @@ REACT_APP_TWITCH_SECRET=<twitch api secret>
 ## Todo
 
 * Twitch VOD support
-* Youtube stream support
-* Reload Twitch stream
+* Refresh player (for frozen twitch streams)
 * Youtube video scrub
 * Display currently playing content (with appropriate controls?)
