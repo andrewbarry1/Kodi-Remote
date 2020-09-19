@@ -66,26 +66,36 @@ class Stream extends React.Component {
 
 class Streams extends React.Component {
   render() {
-    if (this.props.error) {
-      return (
-	  <center><p>Error loading twitch streams</p></center>
-      );
-    }
-    else if (!this.props.isLoaded) {
+    if (!this.props.isLoaded) {
       return (
 	  <center><img src='loading.png'/></center>
       );
     }
-    return (
-	<center>
-	{this.props.streams.map(stream => (
-	    <Stream name={stream.user_name} thumb={stream.thumbnail_url.replace('{width}','320').replace('{height}','180')} title={stream.title} viewers={stream.viewer_count} stream_id={stream.user_id}/>
+    else {
+      return (
+	  <center>
+	  {this.props.streams.map(stream => (
+	      <Stream name={stream.user_name} thumb={stream.thumbnail_url.replace('{width}','320').replace('{height}','180')} title={stream.title} viewers={stream.viewer_count} stream_id={stream.user_id}/>
 	  ))}
-      </center>
-    );
+	</center>
+      );
+    }
   }
 }
 
+class Error extends React.Component {
+  render() {
+    if (this.props.message) {
+      return (
+	  <center><h1 className="error">{this.props.message}</h1></center>
+      );
+    }
+    else {
+      return <></>;
+    }
+  }
+}
+  
 class Nav extends React.Component {
 
   constructor(props) {
@@ -203,13 +213,35 @@ class Page extends React.Component {
       streams: []
     };
     this.reload = this.reload.bind(this);
+    this.ping = this.ping.bind(this);
   }
 
+  ping() {
+    let data = {
+      jsonrpc: '2.0',
+      method: 'JSONRPC.Ping',
+      params: [],
+      id: 99
+    };
+    axios.post('/jsonrpc?JSONRPC.Ping', data) // request proxied to kodi (CORS)
+      .then((r) => {
+	return true;
+      })
+      .catch((e) => {
+	this.setState({
+	  error: 'Kodi server not found'
+	});
+      });
+  }
+  
   reload() {
     this.setState({
       isLoaded: false,
       error: null
     });
+    
+    this.ping();
+    
     axios.post('https://id.twitch.tv/oauth2/token?client_id='+ process.env.REACT_APP_TWITCH_CLIENT +'&client_secret='+ process.env.REACT_APP_TWITCH_SECRET +'&grant_type=client_credentials&scope=')
       .then((response) => {
 	let accessToken = response.data.access_token;
@@ -236,7 +268,8 @@ class Page extends React.Component {
 		.catch((e3) => {
 		  console.log(e3);
 		  this.setState({
-		    error: e3
+		    error: 'Error fetching streams',
+		    isLoaded: true
 		  });
 		});
 	    }
@@ -250,14 +283,16 @@ class Page extends React.Component {
 	  .catch((e2) => {
 	    console.log(e2);
 	    this.setState({
-	      error: e2
+	      isLoaded: true,
+	      error: 'Error fetching streams'
 	    });
 	  });
       })
       .catch((error) => {
 	console.log(error);
 	this.setState({
-	  error: error
+	  isLoaded: true,
+	  error: 'Error fetching API key'
 	});
       });
   }
@@ -278,7 +313,8 @@ class Page extends React.Component {
 	</div>
 
 	<div id="root" className="root">
-	<Streams streams={this.state.streams} isLoaded={this.state.isLoaded} error={this.state.error} />
+	<Error message={this.state.error} />
+	<Streams streams={this.state.streams} isLoaded={this.state.isLoaded} />
 	</div>
 	</>
     );

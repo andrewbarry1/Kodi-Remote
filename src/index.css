@@ -109,3 +109,8 @@ button {
     left: 5px;
     background-image: url("/chat.png");
 }
+
+.error {
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}

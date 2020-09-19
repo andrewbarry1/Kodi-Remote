@@ -3,7 +3,7 @@
 A small React website for playing/controlling Twitch and Youtube videos on Kodi.
 Runs locally, not on the Kodi device itself.
 
-![Kodi-Remote](https://i.imgur.com/kHh1UVn.png)
+![Kodi-Remote](https://i.imgur.com/MYBK6Te.png)
 
 ## Installation/Usage
 
@@ -22,6 +22,5 @@ REACT_APP_TWITCH_SECRET=<twitch api secret>
 ## Todo
 
 * Twitch VOD support
-* Refresh player (for frozen twitch streams)
 * Youtube video scrub
 * Display currently playing content (with appropriate controls?)
