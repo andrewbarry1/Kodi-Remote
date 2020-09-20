@@ -55,7 +55,7 @@ class Stream extends React.Component {
 	<div className="openlocal openlocal-twitch" onClick={this.openStream}></div>
 	<div className="openlocal openlocal-chat" onClick={this.openChat}></div>
 	<h1>{this.props.name}</h1>
-	<img src={this.props.thumb} />
+	<img src={this.props.thumb + '?' + Math.floor(Math.random() * 1000)} />
 	<h2>{this.props.title}</h2>
 	<h4>{this.props.viewers} Viewers</h4>
 	</button>
