@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import wol from 'wol';
 import './index.css';
 
 
@@ -28,7 +29,7 @@ class Stream extends React.Component {
       id: 9001
     };
     
-    axios.post('/jsonrpc?Player.Open', data) // request proxied to kodi (CORS)
+    axios.post('/kodi/jsonrpc?Player.Open', data) // request proxied to kodi (CORS)
       .then((r) => {
 	console.log('Opened stream');
       })
@@ -68,7 +69,7 @@ class Streams extends React.Component {
   render() {
     if (!this.props.isLoaded) {
       return (
-	  <center><img src='loading.png'/></center>
+	  <center><img src='static/loading.png'/></center>
       );
     }
     else {
@@ -111,7 +112,7 @@ class Nav extends React.Component {
       'id': 69
     };
     
-    axios.post('/jsonrpc?Player.Close', data) // request proxied to kodi (CORS)
+    axios.post('/kodi/jsonrpc?Player.Close', data) // request proxied to kodi (CORS)
       .then((r) => {
 	console.log('Closed stream');
       })
@@ -129,7 +130,7 @@ class Nav extends React.Component {
       ],
       'id': 100
     };
-    axios.post('/jsonrpc?Player.PlayPause', data)
+    axios.post('/kodi/jsonrpc?Player.PlayPause', data)
       .then((r) => {
 	console.log('Play/Pause video');
       })
@@ -138,13 +139,12 @@ class Nav extends React.Component {
       });
   }
 
-  
   render() {
     return (
 	<ul>
 	<li className="navbar-left"><a onClick={this.stop}>Stop</a></li>
 	<li className="navbar-left"><a onClick={this.pause}>Pause</a></li>
-	<li className="navbar-right"><a onClick={this.props.reload}><img src='reload.png' /></a></li>
+	<li className="navbar-right"><a onClick={this.props.reload}><img src='static/reload.png' /></a></li>
 	</ul>
     );
   }
@@ -182,7 +182,7 @@ class Youtube extends React.Component {
       },
       id: 9001
     };
-    axios.post('/jsonrpc?Player.Open', data) // request proxied to kodi (CORS)
+    axios.post('/kodi/jsonrpc?Player.Open', data) // request proxied to kodi (CORS)
       .then((r) => {
 	console.log('Opened video');
       })
@@ -223,7 +223,7 @@ class Page extends React.Component {
       params: [],
       id: 99
     };
-    axios.post('/jsonrpc?JSONRPC.Ping', data) // request proxied to kodi (CORS)
+    axios.post('/kodi/jsonrpc?JSONRPC.Ping', data) // request proxied to kodi (CORS)
       .then((r) => {
 	return true;
       })

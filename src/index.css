@@ -102,12 +102,12 @@ button {
 
 .openlocal-twitch {
     right: 5px;
-    background-image: url("/glitch.png");
+    background-image: url("/static/glitch.png");
 }
 
 .openlocal-chat {
     left: 5px;
-    background-image: url("/chat.png");
+    background-image: url("/static/chat.png");
 }
 
 .error {
