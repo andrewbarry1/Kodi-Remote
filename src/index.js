@@ -139,12 +139,23 @@ class Nav extends React.Component {
       });
   }
 
+  tvOn() {
+    axios.get('/api/tv/on')
+      .then((r) => {
+	console.log('turned on the TV');
+      })
+      .catch((e) => {
+	console.log(e);
+      });
+  }
+
   render() {
     return (
 	<ul>
 	<li className="navbar-left"><a onClick={this.stop}>Stop</a></li>
 	<li className="navbar-left"><a onClick={this.pause}>Pause</a></li>
 	<li className="navbar-right"><a onClick={this.props.reload}><img src='static/reload.png' /></a></li>
+	<li className="navbar-right"><a onClick={this.tvOn}><img src='static/power.png' /></a></li>
 	</ul>
     );
   }

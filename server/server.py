@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request
 import requests
+import wakeonlan
 
 app = Flask(__name__)
 
 KODI_URL = 'http://192.168.1.156:8080'
+TV_MAC = 'A8.23.FE.4C.43.A1'
 
 @app.route('/kodi/<path:kodi_path>', methods=['POST'])
 def proxy_kodi(kodi_path):
@@ -15,7 +17,7 @@ def proxy_kodi(kodi_path):
 @app.route('/api/tv/<string:state>')
 def tv_power(state):
     if state == 'on':
-        pass # TODO wake on lan
+        wakeonlan.send_magic_packet(TV_MAC)
     elif state == 'off':
         pass # TODO websocket api.... thanks LG...
     return ''
