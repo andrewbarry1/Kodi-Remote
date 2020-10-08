@@ -15,9 +15,12 @@ REACT_APP_TWITCH_ID=<your account's ID>
 REACT_APP_TWITCH_CLIENT=<twitch api client>
 REACT_APP_TWITCH_SECRET=<twitch api secret>
 ```
-2. Set `proxy` in `package.json` to your Kodi URL
 
-3. `npm install && npm start`
+2. `npm install`
+
+3. run `./copy.sh` to build the static HTML
+
+4. `FLASK_APP=server/server.py flask run` to start the webserver
 
 ## Todo
 

@@ -39,6 +39,7 @@ body {
 .navbar-right {
     float: right;
     height: 30px;
+    padding-right: 10px;
 }
 .nav img {
     height: 30px;
