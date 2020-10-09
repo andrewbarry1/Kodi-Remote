@@ -140,9 +140,9 @@ class Nav extends React.Component {
   }
 
   tvOn() {
-    axios.get('/api/tv/on')
+    axios.get('/api/tv/toggle')
       .then((r) => {
-	console.log('turned on the TV');
+	console.log('turned on/off the TV');
       })
       .catch((e) => {
 	console.log(e);
