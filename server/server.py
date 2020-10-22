@@ -14,32 +14,43 @@ TV_IP = '192.168.1.158'
 TV_KEY = '6e0fd779fc6d7dfaa6c1802a64ced21f'
 TV_HOSTNAME = 'LGwebOSTV'
 
-TV_STATE = os.environ.get('TV_STATE')
-if TV_STATE is None:
-    TV_STATE = 'off'
+TV_ON = False
 
 @app.route('/kodi/<path:kodi_path>', methods=['POST'])
 def proxy_kodi(kodi_path):
+    global TV_ON
     full_url = KODI_URL + '/' + kodi_path
-    r = requests.post(full_url, json=request.get_json())
-    print(r.text)
+    json = request.get_json()
+    if json['method'] == 'Player.Open' and not TV_ON:
+        tv_on()
+    r = requests.post(full_url, json=json)
     return r.text, r.status_code
 
 @app.route('/api/tv/<string:state>')
 def tv_power(state):
-    global TV_STATE
+    global TV_ON
     if state == 'on':
         tv_on()
     elif state == 'off':
         tv_off()
     elif state == 'toggle':
-        if TV_STATE == 'on':
-            TV_STATE = 'off'
+        if TV_ON:
             tv_off()
-        elif TV_STATE == 'off':
-            TV_STATE = 'on'
+        else:
             tv_on()
     return ''
+
+@app.route('/api/volume/<string:command>')
+def vol_control(command):
+    wsCommand = 'volumeUp'
+    if command == 'down':
+        wsCommand = 'volumeDown'
+        
+    ws = LGTVRemote('lgtv', ip=TV_IP, mac=TV_MAC, key=TV_KEY, hostname=TV_HOSTNAME)
+    ws.connect()
+    ws.execute(wsCommand, {})
+    ws.run_forever()
+        
 
 @app.route('/')
 def index():
@@ -47,8 +58,12 @@ def index():
 
 
 def tv_on():
+    global TV_ON
+    TV_ON = True
     wakeonlan.send_magic_packet(TV_MAC)
 def tv_off():
+    global TV_ON
+    TV_ON = False
     ws = LGTVRemote('lgtv', ip=TV_IP, mac=TV_MAC, key=TV_KEY, hostname=TV_HOSTNAME)
     ws.connect()
     ws.execute('off', {})

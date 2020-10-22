@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import wol from 'wol';
 import './index.css';
 
 
@@ -149,13 +148,36 @@ class Nav extends React.Component {
       });
   }
 
+  volUp() {
+    axios.get('/api/volume/up')
+    .then((r) => {
+      console.log('volume up');
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  }
+
+  volDown() {
+    axios.get('/api/volume/down')
+    .then((r) => {
+      console.log('volume down');
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  }
+
   render() {
     return (
 	<ul>
 	<li className="navbar-left"><a onClick={this.stop}>Stop</a></li>
 	<li className="navbar-left"><a onClick={this.pause}>Pause</a></li>
+
 	<li className="navbar-right"><a onClick={this.props.reload}><img src='static/reload.png' /></a></li>
 	<li className="navbar-right"><a onClick={this.tvOn}><img src='static/power.png' /></a></li>
+	<li className="navbar-right"><a onClick={this.volUp}><img src='static/plus.png' /></a></li>
+	<li className="navbar-right"><a onClick={this.volDown}><img src='static/minus.png' /></a></li>
 	</ul>
     );
   }
