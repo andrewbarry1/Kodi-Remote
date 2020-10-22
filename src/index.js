@@ -95,6 +95,25 @@ class Error extends React.Component {
     }
   }
 }
+
+class NavImage extends React.Component {
+
+  render() {
+    return (
+	<li className="navbar-right"><a onClick={this.props.callback}><img src={this.props.img} /></a></li>
+    );
+  }
+}
+
+class NavLink extends React.Component {
+
+  render() {
+    return (
+      	<li className="navbar-left"><a onClick={this.props.callback}>{this.props.text}</a></li>
+    );
+  }
+}
+      
   
 class Nav extends React.Component {
 
@@ -171,13 +190,13 @@ class Nav extends React.Component {
   render() {
     return (
 	<ul>
-	<li className="navbar-left"><a onClick={this.stop}>Stop</a></li>
-	<li className="navbar-left"><a onClick={this.pause}>Pause</a></li>
-
-	<li className="navbar-right"><a onClick={this.props.reload}><img src='static/reload.png' /></a></li>
-	<li className="navbar-right"><a onClick={this.tvOn}><img src='static/power.png' /></a></li>
-	<li className="navbar-right"><a onClick={this.volUp}><img src='static/plus.png' /></a></li>
-	<li className="navbar-right"><a onClick={this.volDown}><img src='static/minus.png' /></a></li>
+	<NavLink callback={this.stop} text='Stop' />
+	<NavLink callback={this.pause} text='Pause' />
+	
+	<NavImage callback={this.props.reload} img='static/reload.png' />
+	<NavImage callback={this.tvOn} img='static/power.png' />
+	<NavImage callback={this.volUp} img='static/plus.png' />
+	<NavImage callback={this.volDown} img='static/minus.png' />
 	</ul>
     );
   }
