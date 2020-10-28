@@ -28,7 +28,7 @@ body {
     text-align: center;
     text-decoration: none;
 }
-.nav li a:hover {
+.nav li:hover {
     background-color: #333333;
 }
 
